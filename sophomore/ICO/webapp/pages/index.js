@@ -10,6 +10,15 @@ import {
 } from "../constants";
 import styles from "../styles/Home.module.css";
 
+const connectTokenContract = (provider) => {
+  const tokenContract = new Contract(
+    TOKEN_CONTRACT_ADDRESS,
+    TOKEN_CONTRACT_ABI,
+    provider
+  );
+  return tokenContract;
+};
+
 export default function Home() {
   // Create a BigNumber `0`
   const zero = BigNumber.from(0);
@@ -47,11 +56,7 @@ export default function Home() {
         provider
       );
       // Create an instance of tokenContract
-      const tokenContract = new Contract(
-        TOKEN_CONTRACT_ADDRESS,
-        TOKEN_CONTRACT_ABI,
-        provider
-      );
+      const tokenContract = connectTokenContract(provider);
       // We will get the signer now to extract the address of the currently connected MetaMask account
       const signer = await getProviderOrSigner(true);
       // Get the address associated to the signer which is connected to  MetaMask
@@ -93,11 +98,7 @@ export default function Home() {
       // No need for the Signer here, as we are only reading state from the blockchain
       const provider = await getProviderOrSigner();
       // Create an instace of token contract
-      const tokenContract = new Contract(
-        TOKEN_CONTRACT_ADDRESS,
-        TOKEN_CONTRACT_ABI,
-        provider
-      );
+      const tokenContract = connectTokenContract(provider);
       // We will get the signer now to extract the address of the currently connected MetaMask account
       const signer = await getProviderOrSigner(true);
       // Get the address associated to the signer which is connected to  MetaMask
@@ -121,11 +122,7 @@ export default function Home() {
       // Create an instance of tokenContract
       const signer = await getProviderOrSigner(true);
       // Create an instance of tokenContract
-      const tokenContract = new Contract(
-        TOKEN_CONTRACT_ADDRESS,
-        TOKEN_CONTRACT_ABI,
-        signer
-      );
+      const tokenContract = connectTokenContract(signer);
       // Each token is of `0.001 ether`. The value we need to send is `0.001 * amount`
       const value = 0.001 * amount;
       const tx = await tokenContract.mint(amount, {
@@ -155,11 +152,7 @@ export default function Home() {
       // Create an instance of tokenContract
       const signer = await getProviderOrSigner(true);
       // Create an instance of tokenContract
-      const tokenContract = new Contract(
-        TOKEN_CONTRACT_ADDRESS,
-        TOKEN_CONTRACT_ABI,
-        signer
-      );
+      const tokenContract = connectTokenContract(signer);
       const tx = await tokenContract.claim();
       setLoading(true);
       // wait for the transaction to get mined
@@ -184,11 +177,7 @@ export default function Home() {
       // No need for the Signer here, as we are only reading state from the blockchain
       const provider = await getProviderOrSigner();
       // Create an instance of token contract
-      const tokenContract = new Contract(
-        TOKEN_CONTRACT_ADDRESS,
-        TOKEN_CONTRACT_ABI,
-        provider
-      );
+      const tokenContract = connectTokenContract(provider);
       // Get all the tokens that have been minted
       const _tokensMinted = await tokenContract.totalSupply();
       setTokensMinted(_tokensMinted);
@@ -208,6 +197,7 @@ export default function Home() {
         TOKEN_CONTRACT_ABI,
         provider
       );
+      const tokenContract = connectTokenContract(provider);
       // call the owner function from the contract
       const _owner = await tokenContract.owner();
       // we get signer to extract address of currently connected Metamask account
@@ -229,11 +219,7 @@ export default function Home() {
   const withdrawCoins = async () => {
     try {
       const signer = await getProviderOrSigner(true);
-      const tokenContract = new Contract(
-        TOKEN_CONTRACT_ADDRESS,
-        TOKEN_CONTRACT_ABI,
-        signer
-      );
+      const tokenContract = connectTokenContract(signer);
 
       const tx = await tokenContract.withdraw();
       setLoading(true);
